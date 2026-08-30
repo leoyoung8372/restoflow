@@ -1,0 +1,40 @@
+# ---- Maven ----
+# 编译产物目录
+target/
+
+# ---- IDE ----
+# IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+
+# VS Code
+.vscode/
+
+# Eclipse
+.classpath
+.project
+.settings/
+.factorypath
+
+# NetBeans
+nbproject/private/
+.nb-gradle/
+build/
+
+# ---- 日志与临时文件 ----
+*.log
+logs/
+*.tmp
+*.swp
+
+# ---- 本地环境配置 ----
+# 含数据库账号密码等本机专属配置，不入库
+application-local.yml
+application-local.*
+
+# ---- 操作系统文件 ----
+.DS_Store
+Thumbs.db
