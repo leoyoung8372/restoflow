@@ -1,0 +1,12 @@
+# ---- 设计文档与参考资料（仅保留在本地）----
+docs/
+resource/
+docs-backup/
+
+# ---- IDE 配置 ----
+.vscode/
+.idea/
+*.iml
+
+# ---- 数据库临时脚本 ----
+MySQL.session.sql
