@@ -9,3 +9,12 @@ spring:
     url: jdbc:mysql://localhost:3306/restoflow?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
     username: root
     password: 123456
+
+mybatis-plus:
+  configuration:
+    # 数据库列名是下划线（real_name），Java 字段是驼峰（realName）。
+    # 开着它，查询结果自动转换；不写这行，realName 会一直是 null。
+    map-underscore-to-camel-case: true
+  global-config:
+    # 启动时不打印 MyBatis-Plus 那几行 ASCII 图案，日志更干净
+    banner: false
