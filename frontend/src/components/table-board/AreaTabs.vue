@@ -36,15 +36,16 @@ const emit = defineEmits<{
   gap: 8px;
   width: fit-content;   /* 宽度只包住内容，不向右铺满整行 */
   margin-left: 30px;   /* 整体距左边一点距离 */
-  padding: 5px 10px;
+  padding: 5px 20px;
   border-radius: 8px;
   background: #424248;
 }
 
 .area-tab {
-  /* 字号从 15px 增到 16px 会让行高多出约 2px，
-     把上下内边距从 8px 压到 7px 抵消掉，整体高度因此保持不变 */
-  padding: 7px 24px;
+  /* 【微调 Tab 宽度就改这行的第二个值】
+     padding: 上下 左右 —— 左右值越大，每个 Tab 越宽
+     当前 40px，想更宽就加大（如 48px、56px） */
+  padding: 7px 50px;
   border: none;
   border-radius: 6px;
   background: transparent;

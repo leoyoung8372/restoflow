@@ -35,7 +35,12 @@ const unsettled = computed(() => {
 })
 
 async function loadTables() {
-  tableList.value = await getTableList()
+  const list = await getTableList()
+  // 按桌台名自然排序：A1、A2、A10 而不是 A1、A10、A2。
+  // localeCompare 的 numeric 选项会把名字里的数字当作数字比较，
+  // 否则纯字符串比较下 "A10" 会排在 "A2" 前面
+  list.sort((a, b) => a.name.localeCompare(b.name, 'zh-CN', { numeric: true }))
+  tableList.value = list
 }
 
 // 卡片区域的 DOM 引用，用于"向上滑 / 向下滑"

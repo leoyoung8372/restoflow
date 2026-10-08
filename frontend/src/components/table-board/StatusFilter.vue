@@ -15,15 +15,17 @@ const emit = defineEmits<{
 }>()
 
 /**
- * 选项列表。value 对应 dining_table.status 的码值（0 表示全部），
- * color 与卡片配色一致，用于左边的小方块。
+ * 选项列表。value 对应 dining_table.status 的码值（0 表示全部）。
+ *
+ * 【要改状态颜色就改这里的 color】——它决定每个选项左边那个小方块的颜色，
+ * 与 TableGrid 里卡片的配色保持一致。
  */
 const options = [
-  { label: '全部', value: 0, color: '#424248' },
-  { label: '空台', value: 1, color: '#ffffff' },
-  { label: '待下单', value: 2, color: '#67c23a' },
-  { label: '待结账', value: 3, color: '#f56c6c' },
-  { label: '已结账', value: 4, color: '#e6a23c' },
+  { label: '全部', value: 0, color: '#000000' },   // 全部：黑
+  { label: '空台', value: 1, color: '#ffffff' },   // 空台：白
+  { label: '待下单', value: 2, color: '#2E825A' },   // 待下单：绿
+  { label: '待结账', value: 3, color: '#C9433E' },   // 待结账：红
+  { label: '已结账', value: 4, color: '#e6a23c' },   // 已结账：橙
 ]
 </script>
 
@@ -50,7 +52,7 @@ const options = [
   display: flex;
   overflow: hidden;   /* 配合圆角，把两端的选项裁圆 */
   border-radius: 10px;
-  background: #fff;
+  background: #e3e3e3;   /* 外框底色 */
   box-shadow: 0 4px 16px rgb(0 0 0 / 20%);
 }
 
@@ -60,7 +62,7 @@ const options = [
   gap: 8px;
   padding: 0 24px;
   height: 56px;
-  color: #c9c9c9;   /* 未选中：浅灰字 */
+  color: #525252;   /* 未选中：浅灰字 */
   font-size: 16px;
   cursor: pointer;
 }
@@ -71,7 +73,7 @@ const options = [
 }
 
 .status-item.active {
-  background: #c9c9c9;   /* 选中：浅灰底 */
+  background: #b1b1b1;   /* 选中：浅灰底 */
   color: #000;   /* 选中：黑字 */
 }
 
