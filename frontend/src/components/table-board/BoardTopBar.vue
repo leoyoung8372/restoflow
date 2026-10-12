@@ -122,7 +122,9 @@ const showAmount = ref(true)
   position: absolute;
   left: 14px;
   top: 50%;
-  transform: translateY(-50%);   /* 配合 top:50% 实现垂直居中 */
+  /* 先垂直居中（-50%），再上移 2px 与输入文字对齐——
+     图标字形在字体里天然偏低，纯居中看着会低于文字 */
+  transform: translateY(calc(-50% - 1px));
   z-index: 1;
   font-size: 20px;
   color: #c9c9c9;   /* 与占位符同色，在深色底上可见 */

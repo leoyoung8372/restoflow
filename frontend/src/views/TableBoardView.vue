@@ -23,8 +23,17 @@ const activeStatus = ref(0)   // 当前选中的状态筛选，0 表示"全部"
  *  不写死——管理员增删区域后自动跟着变，没有桌台的区域不会出现。 */
 const areaTabs = computed(() => ['全部', ...new Set(tableList.value.map((t) => t.areaName))])
 
+/** 按选中的区域筛选桌台，交给 TableGrid 渲染。
+ *  "全部"时直接返回原数组，不做无谓的遍历。 */
+const filteredTables = computed(() => {
+  if (activeArea.value === '全部') {
+    return tableList.value
+  }
+  return tableList.value.filter((t) => t.areaName === activeArea.value)
+})
 
-/** 未结账汇总：按文档口径，只有"待结账"计入；待下单还没产生消费，不算 */
+/** 未结账汇总：按文档口径，只有"待结账"计入；待下单还没产生消费，不算。
+ *  用 tableList 而非 filteredTables——汇总始终统计全店，不随区域筛选变化 */
 const unsettled = computed(() => {
   const list = tableList.value.filter((t) => t.status === 3)
   return {
@@ -77,7 +86,7 @@ onMounted(loadTables)
     <TableGrid
       ref="gridRef"
       class="board-grid"
-      :tables="tableList"
+      :tables="filteredTables"
     />
 
     <!-- 状态筛选：悬浮在底部，水平居中 -->
