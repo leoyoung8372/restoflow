@@ -83,6 +83,7 @@ CREATE TABLE `orders` (
   `table_id`         BIGINT        NOT NULL COMMENT '归属桌台（无外键，桌台可删除）',
   `table_name`       VARCHAR(50)   NOT NULL COMMENT '开台时桌台名快照',
   `people_count`     INT           NOT NULL COMMENT '用餐人数',
+  `remark`           VARCHAR(100)  NULL     COMMENT '桌台备注',
   `status`           TINYINT       NOT NULL COMMENT '1待下单 2待结账 3已结账',
   `original_amount`  DECIMAL(10,2) NOT NULL DEFAULT 0.00 COMMENT '菜品价格合计',
   `discount_amount`  DECIMAL(10,2) NOT NULL DEFAULT 0.00 COMMENT '优惠金额',

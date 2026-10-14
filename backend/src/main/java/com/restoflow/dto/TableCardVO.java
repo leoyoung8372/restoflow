@@ -29,6 +29,8 @@ public class TableCardVO {
 
     private Integer peopleCount;   // 用餐人数，空台时 null
 
+    private String remark;   // 桌台备注，空台或未填时 null
+
     private String firstOrderAt;   // 首单时间 yyyy-MM-dd HH:mm:ss，前端据此算用餐时长
 
     private String amount;   // 消费金额，字符串格式如 "88.00"，空台时 null

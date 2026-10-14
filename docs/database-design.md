@@ -110,6 +110,7 @@
 | `table_id` | BIGINT | 非空，**无外键** | 归属桌台；**桌台可删除**，故不加约束 |
 | `table_name` | VARCHAR(50) | 非空 | 桌台名**快照**；桌台删除后历史订单仍可显示。**转台时随 `table_id` 一起更新** |
 | `people_count` | INT | 非空 | 用餐人数 |
+| `remark` | VARCHAR(100) | 可空 | 桌台备注（开台时填写，选填） |
 | `status` | TINYINT | 非空 | 1待下单 2待结账 3已结账 |
 | `original_amount` | DECIMAL(10,2) | 非空，默认 0 | 菜品价格合计 |
 | `discount_amount` | DECIMAL(10,2) | 非空，默认 0 | 优惠金额 |

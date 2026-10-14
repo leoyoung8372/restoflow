@@ -11,6 +11,10 @@ defineProps<{
   tables: TableCard[]   // 要展示的桌台（父组件已按区域、状态筛好）
 }>()
 
+const emit = defineEmits<{
+  'card-click': [table: TableCard]   // 点击某张卡片，抛给父组件决定做什么
+}>()
+
 /** 卡片左下角文字：空台显示座位数，已开台显示"已坐/座位"。
  *  订单域未实现，peopleCount 目前恒为 null，因此会退化为显示座位数。 */
 function cardText(table: TableCard): string {
@@ -25,6 +29,7 @@ function cardText(table: TableCard): string {
       :key="table.id"
       class="card"
       :class="`status-${table.status}`"
+      @click="emit('card-click', table)"
     >
       <div class="card-name">{{ table.name }}</div>
       <div class="card-info">

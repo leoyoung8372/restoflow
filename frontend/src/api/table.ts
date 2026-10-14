@@ -14,9 +14,16 @@ export interface TableCard {
   status: number   // 1空台 2待下单 3待结账 4已结账
   areaId: number
   areaName: string   // 区域名，如 A区（后端组装）
-  peopleCount: number | null   // 用餐人数；订单域未实现，当前恒为 null
-  firstOrderAt: string | null   // 首单时间 yyyy-MM-dd HH:mm:ss；同上
-  amount: string | null   // 消费金额，字符串如 "88.00"；同上
+  peopleCount: number | null   // 用餐人数，空台时 null
+  remark: string | null   // 桌台备注，空台或未填时 null
+  firstOrderAt: string | null   // 首单时间；订单明细模块未实现，当前恒为 null
+  amount: string | null   // 消费金额，字符串如 "88.00"，空台时 null
+}
+
+/** 开台入参，对应后端 OpenTableRequest。操作人不在此传入——由后端从 token 取 */
+export interface OpenTableParams {
+  peopleCount: number
+  remark: string
 }
 
 /**
@@ -25,4 +32,9 @@ export interface TableCard {
  */
 export function getTableList(): Promise<TableCard[]> {
   return request.get('/tables')
+}
+
+/** 开台：为空闲桌台创建订单 */
+export function openTable(tableId: number, params: OpenTableParams): Promise<void> {
+  return request.post(`/tables/${tableId}/open`, params)
 }

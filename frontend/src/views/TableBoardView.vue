@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
-import { getTableList, type TableCard } from '@/api/table'
+import { ElMessage } from 'element-plus'
+import { getTableList, openTable, type TableCard } from '@/api/table'
+import { useAuthStore } from '@/stores/auth'
 import BoardTopBar from '@/components/table-board/BoardTopBar.vue'
 import AreaTabs from '@/components/table-board/AreaTabs.vue'
 import TableGrid from '@/components/table-board/TableGrid.vue'
 import ScrollButtons from '@/components/table-board/ScrollButtons.vue'
 import StatusFilter from '@/components/table-board/StatusFilter.vue'
+import TableOpenDialog from '@/components/table-board/TableOpenDialog.vue'
 
 /**
  * 桌台看板页面容器。
@@ -14,10 +17,18 @@ import StatusFilter from '@/components/table-board/StatusFilter.vue'
  * 随着子组件逐个接入，这里的状态和计算属性也逐个补上。
  */
 
+const authStore = useAuthStore()
+
 const tableList = ref<TableCard[]>([])   // 接口返回的全部桌台
 const keyword = ref('')   // 搜索词，与 BoardTopBar 双向绑定
 const activeArea = ref('全部')   // 当前选中的区域 Tab
 const activeStatus = ref(0)   // 当前选中的状态筛选，0 表示"全部"
+const openDialogVisible = ref(false)   // 开台弹窗是否显示
+const currentTable = ref<TableCard | null>(null)   // 弹窗当前操作的桌台
+
+/** 弹窗里显示的"操作人"。由前端从登录信息取，仅用于展示——
+ *  真正入库的操作人由后端从 token 解出，不经过前端 */
+const operatorName = computed(() => authStore.user?.realName ?? '')
 
 /** 区域 Tab 列表：从数据里提取去重后的区域名，前面加"全部"。
  *  不写死——管理员增删区域后自动跟着变，没有桌台的区域不会出现。 */
@@ -50,6 +61,33 @@ async function loadTables() {
   // 否则纯字符串比较下 "A10" 会排在 "A2" 前面
   list.sort((a, b) => a.name.localeCompare(b.name, 'zh-CN', { numeric: true }))
   tableList.value = list
+}
+
+/** 点击卡片：目前只有空台能开台，其余状态暂不处理 */
+function handleCardClick(table: TableCard) {
+  if (table.status !== 1) {
+    ElMessage.info('该桌台不是空台，暂不支持操作')
+    return
+  }
+  currentTable.value = table
+  openDialogVisible.value = true
+}
+
+/** 弹窗点"开台"：调接口，成功后关闭弹窗并重新拉列表刷新看板 */
+async function handleOpenConfirm(payload: { peopleCount: number; remark: string }) {
+  const table = currentTable.value
+  if (!table) return
+
+  // 空值先在前端拦一道，省掉一次网络往返；后端也有同样的范围校验
+  if (!payload.peopleCount) {
+    ElMessage.warning('请输入用餐人数')
+    return
+  }
+
+  await openTable(table.id, payload)
+  openDialogVisible.value = false
+  ElMessage.success(`${table.name} 开台成功`)
+  await loadTables()   // 重新拉取，让卡片反映最新的桌台状态与订单信息
 }
 
 // 卡片区域的 DOM 引用，用于"向上滑 / 向下滑"
@@ -87,6 +125,15 @@ onMounted(loadTables)
       ref="gridRef"
       class="board-grid"
       :tables="filteredTables"
+      @card-click="handleCardClick"
+    />
+
+    <!-- 开台弹窗 -->
+    <TableOpenDialog
+      v-model:visible="openDialogVisible"
+      :table="currentTable"
+      :operator-name="operatorName"
+      @confirm="handleOpenConfirm"
     />
 
     <!-- 状态筛选：悬浮在底部，水平居中 -->
